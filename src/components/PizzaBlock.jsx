@@ -4,9 +4,7 @@ export default function PizzaBlock({ title, price, imageUrl, sizes, types }) {
   const [sizeState, setSizeState] = useState(0);
   const [activeDoughType, setActiveDoughType] = useState(0);
 
-
-
-  const doughType = ['тонкое', 'традиционное']
+  const doughType = ['тонкое', 'традиционное'];
 
   return (
     <div className="pizza-block">
@@ -14,13 +12,15 @@ export default function PizzaBlock({ title, price, imageUrl, sizes, types }) {
       <h4 className="pizza-block__title">{title}</h4>
       <div className="pizza-block__selector">
         <ul>
-          {types.map((typeId, i)=> (
-            <li onClick={() => setActiveDoughType(i)} className={activeDoughType === i && 'active'}>{doughType[typeId]}</li>
+          {types.map((typeId, i) => (
+            <li key={i} onClick={() => setActiveDoughType(i)} className={activeDoughType === i ? 'active' : ''}>
+              {doughType[typeId]}
+            </li>
           ))}
         </ul>
         <ul>
           {sizes.map((el, i) => (
-            <li onClick={() => setSizeState(i)} className={sizeState === i && 'active'}>
+            <li key={i} onClick={() => setSizeState(i)} className={sizeState === i ? 'active' : ''}>
               {el} {'см.'}
             </li>
           ))}

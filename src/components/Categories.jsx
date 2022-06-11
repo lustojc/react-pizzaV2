@@ -5,20 +5,18 @@ export default function Categories() {
 
   const arrCategories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
-  const changeCat = (index) => {
+  const changeCategories = (index) => {
     setActiveIndex(index);
   };
 
   return (
     <div className="categories">
       <ul>
-        {arrCategories.map((el, i) => {
-          return (
-            <li onClick={() => changeCat(i)} className={activeIndex === i && 'active'}>
-              {el}
-            </li>
-          );
-        })}
+        {arrCategories.map((el, i) => (
+          <li key={i} onClick={() => changeCategories(i)} className={activeIndex === i ? 'active' : ''}>
+            {el}
+          </li>
+        ))}
       </ul>
     </div>
   );

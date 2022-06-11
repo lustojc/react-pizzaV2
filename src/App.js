@@ -4,9 +4,21 @@ import PizzaBlock from './components/PizzaBlock';
 import Sort from './components/Sort';
 import './scss/app.scss';
 
-import pizzas from './assets/pizza.json';
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [pizzas, setPizzas] = useState([]);
+
+  useEffect(() => {
+    fetch('https://62a49bf6259aba8e10ebade1.mockapi.io/items')
+      .then((data) => {
+        return data.json();
+      })
+      .then((data) => {
+        setPizzas(data);
+      });
+  }, []);
+
   return (
     <div>
       <div className="wrapper">

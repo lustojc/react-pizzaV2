@@ -5,9 +5,11 @@ import Sort from './components/Sort';
 import './scss/app.scss';
 
 import { useEffect, useState } from 'react';
+import Skeleton from './components/PizzaBlock/Skeleton';
 
 function App() {
   const [pizzas, setPizzas] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch('https://62a49bf6259aba8e10ebade1.mockapi.io/items')
@@ -16,6 +18,7 @@ function App() {
       })
       .then((data) => {
         setPizzas(data);
+        setIsLoading(false);
       });
   }, []);
 
@@ -31,9 +34,9 @@ function App() {
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
-              {pizzas.map((el) => (
-                <PizzaBlock key={el.id} {...el} />
-              ))}
+              {isLoading
+                ? [...new Array(8)].map((_, i) => <Skeleton key={i} />)
+                : pizzas.map((el) => <PizzaBlock key={el.id} {...el} />)}
             </div>
           </div>
         </div>

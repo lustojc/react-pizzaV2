@@ -1,14 +1,21 @@
 import { useState } from 'react';
 
-export default function Sort() {
+export default function Sort({ value, onChangeSort }) {
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
-  const [currentSort, setCurrentSortCategory] = useState(0);
 
-  const sortList = ['популярности', 'цене', 'алфавиту'];
-  const sortName = sortList[currentSort];
+  const sortList = [
+    { name: 'популярности(DESC)', sortProperty: 'rating' },
+    { name: 'популярности(ASC)', sortProperty: '-rating' },
+    { name: 'цене(DESC)', sortProperty: 'price' },
+    { name: 'цене(ASC)', sortProperty: '-price' },
+    { name: 'алфавиту(DESC)', sortProperty: 'title' },
+    { name: 'алфавиту(ASC)', sortProperty: '-title' },
+  ];
+  // Параметр ASC (по умолчанию) устанавливает порядок сортировки по возрастанию, от меньших значений к большим.
+  // Параметр DESC устанавливает порядок сортировки по убыванию, от больших значений к меньшим.
 
-  const handleChangeCategory = (index) => {
-    setCurrentSortCategory(index);
+  const handleChangeCategory = (objSort) => {
+    onChangeSort(objSort);
     setIsVisiblePopup(false);
   };
 
@@ -25,19 +32,19 @@ export default function Sort() {
             d="M10 5C10 5.16927 9.93815 5.31576 9.81445 5.43945C9.69075 5.56315 9.54427 5.625 9.375 5.625H0.625C0.455729 5.625 0.309245 5.56315 0.185547 5.43945C0.061849 5.31576 0 5.16927 0 5C0 4.83073 0.061849 4.68424 0.185547 4.56055L4.56055 0.185547C4.68424 0.061849 4.83073 0 5 0C5.16927 0 5.31576 0.061849 5.43945 0.185547L9.81445 4.56055C9.93815 4.68424 10 4.83073 10 5Z"
             fill="#2C2C2C"
           />
-        </svg>  
+        </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsVisiblePopup(!isVisiblePopup)}>{sortName}</span>
+        <span onClick={() => setIsVisiblePopup(!isVisiblePopup)}>{value.name}</span>
       </div>
       {isVisiblePopup && (
         <div className="sort__popup">
           <ul>
-            {sortList.map((el, i) => (
+            {sortList.map((objSort, i) => (
               <li
                 key={i}
-                onClick={() => handleChangeCategory(i)}
-                className={currentSort === i ? 'active' : ''}>
-                {el}
+                onClick={() => handleChangeCategory(objSort)}
+                className={value.sortProperty === objSort.sortProperty ? 'active' : ''}>
+                {objSort.name}
               </li>
             ))}
           </ul>

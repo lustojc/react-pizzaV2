@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import Header from './components/Header';
@@ -8,6 +8,8 @@ import NotFound from './pages/NotFound';
 
 import './scss/app.scss';
 
+export const SearchContext = React.createContext('');
+
 function App() {
   const [searchValue, setSearhValue] = useState('');
   const searchRef = useRef(null);
@@ -15,12 +17,14 @@ function App() {
   return (
     <div>
       <div className="wrapper">
-        <Header searchValue={searchValue} setSearhValue={setSearhValue} searchRef={searchRef} />
-        <Routes>
-          <Route path="/" element={<Home searchValue={searchValue} searchRef={searchRef} />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <SearchContext.Provider value={{ searchValue, setSearhValue, searchRef }}>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </SearchContext.Provider>
       </div>
     </div>
   );

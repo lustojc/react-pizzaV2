@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './Search.module.scss';
 
-function Search({ searchValue, setSearhValue }) {
+function Search({ searchValue, setSearhValue, searchRef }) {
   return (
     <div className={styles.root}>
       <svg className={styles.icon} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -11,6 +11,7 @@ function Search({ searchValue, setSearhValue }) {
       <input
         value={searchValue}
         onChange={(event) => setSearhValue(event.target.value)}
+        ref={searchRef}
         className={styles.input}
         placeholder="Поиск пиццы..."
       />

@@ -1,7 +1,15 @@
 import { useState } from 'react';
 
-export default function Sort({ value, onChangeSort }) {
+import { useSelector, useDispatch } from 'react-redux';
+
+import { setSort } from '../redux/slices/filterSlice';
+
+export default function Sort() {
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const sort = useSelector((state) => state.filter.sort);
 
   const sortList = [
     { name: 'популярности(DESC)', sortProperty: 'rating' },
@@ -15,7 +23,7 @@ export default function Sort({ value, onChangeSort }) {
   // Параметр DESC устанавливает порядок сортировки по убыванию, от больших значений к меньшим.
 
   const handleChangeCategory = (objSort) => {
-    onChangeSort(objSort);
+    dispatch(setSort(objSort));
     setIsVisiblePopup(false);
   };
 
@@ -34,7 +42,7 @@ export default function Sort({ value, onChangeSort }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsVisiblePopup(!isVisiblePopup)}>{value.name}</span>
+        <span onClick={() => setIsVisiblePopup(!isVisiblePopup)}>{sort.name}</span>
       </div>
       {isVisiblePopup && (
         <div className="sort__popup">
@@ -43,7 +51,7 @@ export default function Sort({ value, onChangeSort }) {
               <li
                 key={i}
                 onClick={() => handleChangeCategory(objSort)}
-                className={value.sortProperty === objSort.sortProperty ? 'active' : ''}>
+                className={sort.sortProperty === objSort.sortProperty ? 'active' : ''}>
                 {objSort.name}
               </li>
             ))}

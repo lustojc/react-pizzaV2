@@ -1,5 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 
+import { useSelector, useDispatch } from 'react-redux';
+
+import { setCategoryId } from '../redux/slices/filterSlice';
+
 import PizzaBlock from '../components/PizzaBlock';
 import Sort from '../components/Sort';
 import Categories from '../components/Categories';
@@ -9,29 +13,27 @@ import Pagination from '../components/Pagination';
 import { SearchContext } from '../App';
 
 function Home() {
-  const { searchValue, searchRef } = useContext(SearchContext);
-
   const [pizzas, setPizzas] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [categoryId, setCategoryId] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentSort, setCurrentSortCategory] = useState({
-    name: 'популярности',
-    sortProperty: 'rating',
-  });
+
+  const { searchValue, searchRef } = useContext(SearchContext);
+
+  const { categoryId, sort } = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // если я ищу пиццы, я переключаюсь на вкладку "ВСЕ"
+    // если я хочу воспользоваться поиском пиццы (делаю инпут в фокус), я переключаю на вкладку "ВСЕ"
     if (document.activeElement === searchRef.current) {
-      setCategoryId(0);
+      dispatch(setCategoryId(0));
     }
-  }, [searchValue]);
+  }, [searchValue, searchRef]);
 
   useEffect(() => {
     setIsLoading(true);
 
-    const sortBy = currentSort.sortProperty.replace('-', '');
-    const order = currentSort.sortProperty.includes('-') ? 'asc' : 'desc';
+    const sortBy = sort.sortProperty.replace('-', '');
+    const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const backendSearch = searchValue ? `&search=${searchValue}` : '';
 
@@ -46,17 +48,21 @@ function Home() {
         setIsLoading(false);
       });
     // window.scrollTo(0, 0);
-  }, [categoryId, currentSort, searchValue, currentPage]);
+  }, [categoryId, sort, searchValue, currentPage]);
 
   const pizzasArray = pizzas?.map((el) => <PizzaBlock key={el.id} {...el} />);
   const skeleton = [...new Array(4)].map((_, i) => <Skeleton key={i} />);
+
+  const onChangeCategory = (id) => {
+    dispatch(setCategoryId(id));
+  };
 
   return (
     <div className="content">
       <div className="container">
         <div className="content__top">
-          <Categories value={categoryId} onChangeCategory={(i) => setCategoryId(i)} />
-          <Sort value={currentSort} onChangeSort={(i) => setCurrentSortCategory(i)} />
+          <Categories value={categoryId} onChangeCategory={onChangeCategory} />
+          <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">{isLoading ? skeleton : pizzasArray}</div>
